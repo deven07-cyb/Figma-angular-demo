@@ -68,20 +68,13 @@ export class SignupComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+onSubmit(): void {
+    console.log("tttt")
     if (this.signupForm.invalid) {
-      // Mark all fields as touched to trigger validation errors
-      Object.keys(this.signupForm.controls).forEach(key => {
-        const control = this.signupForm.get(key);
-        control?.markAsTouched();
-      });
+      this.signupForm.markAllAsTouched();
       return;
     }
-    
-    // Form is valid, proceed with submission
-    console.log('Form Submitted', this.signupForm.value);
-    // Here you would typically call your API service to register the user
-  }
+}
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
     if (field === 'password') {
@@ -91,9 +84,16 @@ export class SignupComponent implements OnInit {
     }
   }
 
-  onVideoOptionChange(option: string): void {
+onVideoOptionChange(option: string) {
     this.videoUploadOption = option;
-    // Reset the file field when switching between upload options
-    this.signupForm.get('introVideo')?.setValue('');
+    if (option === 'youtube') {
+      this.signupForm.get('introVideo')?.setValidators([
+        Validators.required,
+        Validators.pattern(/^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/)|youtu\.be\/)[\w-]{11}$/)
+      ]);
+    } else {
+      this.signupForm.get('introVideo')?.clearValidators();
+    }
+    this.signupForm.get('introVideo')?.updateValueAndValidity();
   }
 }
