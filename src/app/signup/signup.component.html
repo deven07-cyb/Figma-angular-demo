@@ -1,0 +1,253 @@
+<header>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 header-wrap">
+          <div class="logo">
+            <a href="#"><img src="assets/images/logo.svg" alt="E-Tutor logo" class="img-responsive"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <main>
+    <section class="e-tutor">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="title text-center">
+              <h1 class="title">Join E-Tutor City For Free</h1>
+              <p class="text-muted description">Explore any interest with <span>10,000+ classes.</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <section class="e-tutor-form">
+      <div class="container form-container">
+        <div class="row info-sec">
+  
+          <div class="col-12 col-lg-6 main-form">
+            <div class="form-wrap">
+  
+              <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="create-account-form">
+                <h1>Create Account</h1>
+                
+                <!-- User Type Selection -->
+                <div class="form-group">
+                  <label>I am a:</label>
+                  <div class="user-type-options">
+                    <div class="user-type-option">
+                      <input type="radio" id="student" formControlName="userType" value="student">
+                      <label for="student">Student</label>
+                    </div>
+                    <div class="user-type-option">
+                      <input type="radio" id="tutor" formControlName="userType" value="tutor">
+                      <label for="tutor">Tutor</label>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Time Zone -->
+                <div class="form-group">
+                  <label>Time zone</label>
+                  <div class="input-with-icon">
+                    <input type="text" formControlName="timezone" readonly>
+                    <i class="far fa-clock icon-right"></i>
+                  </div>
+                </div>
+                
+                <!-- Name -->
+                <div class="form-group">
+                  <label>Enter Your Name</label>
+                  <div class="input-with-icon">
+                    <input type="text" formControlName="name" placeholder="Abc abc">
+                    <i class="far fa-user icon-right"></i>
+                  </div>
+                  <div *ngIf="f['name'].touched && f['name'].invalid" class="error-message">
+                    <div *ngIf="f['name'].errors?.['required']">Name is required</div>
+                    <div *ngIf="f['name'].errors?.['minlength']">Name must be at least 2 characters</div>
+                  </div>
+                </div>
+                
+                <!-- Email -->
+                <div class="form-group">
+                  <label>Enter Your Email</label>
+                  <div class="input-with-icon">
+                    <input type="email" formControlName="email" placeholder="name123@example.com">
+                    <i class="far fa-envelope icon-right"></i>
+                  </div>
+                  <p class="input-hint">We'll never share your email with anyone else.</p>
+                  <div *ngIf="f['email'].touched && f['email'].invalid" class="error-message">
+                    <div *ngIf="f['email'].errors?.['required']">Email is required</div>
+                    <div *ngIf="f['email'].errors?.['email']">Enter a valid email address</div>
+                  </div>
+                </div>
+                
+                <!-- Password -->
+                <div class="form-group">
+                  <label>Enter Your Password</label>
+                  <div class="input-with-icon">
+                    <input [type]="hidePassword ? 'password' : 'text'" 
+                           formControlName="password" 
+                           placeholder="at least 8 characters">
+                    <i class="far" 
+                       [ngClass]="hidePassword ? 'far fa-eye-slash' : 'far fa-eye'" 
+                       (click)="togglePasswordVisibility('password')" 
+                       class="icon-right toggle-password"></i>
+                  </div>
+                  <div *ngIf="f['password'].touched && f['password'].invalid" class="error-message">
+                    <div *ngIf="f['password'].errors?.['required']">Password is required</div>
+                    <div *ngIf="f['password'].errors?.['minlength']">Password must be at least 8 characters</div>
+                  </div>
+                </div>
+                
+                <!-- Confirm Password -->
+                <div class="form-group">
+                  <label>Confirm Password</label>
+                  <div class="input-with-icon">
+                    <input [type]="hideConfirmPassword ? 'password' : 'text'" 
+                           formControlName="confirmPassword" 
+                           placeholder="••••••••"
+                           [ngClass]="{'error': f['confirmPassword'].touched && f['confirmPassword'].invalid}">
+                    <i class="far" 
+                       [ngClass]="hideConfirmPassword ? 'far fa-eye-slash' : 'far fa-eye'" 
+                       (click)="togglePasswordVisibility('confirmPassword')" 
+                       class="icon-right toggle-password"></i>
+                  </div>
+                  <div *ngIf="f['confirmPassword'].touched && f['confirmPassword'].invalid" class="error-message">
+                    <div *ngIf="f['confirmPassword'].errors?.['required']">Confirm password is required</div>
+                    <div *ngIf="f['confirmPassword'].errors?.['passwordMismatch']">Passwords do not match</div>
+                  </div>
+                </div>
+                
+                <!-- Introduction Video Upload -->
+                <div class="form-group">
+                  <label class="required">Upload Introduction video (Maximum size 1024 mb)</label>
+                  <div class="upload-options">
+                    <div class="radio-option">
+                      <input type="radio" id="upload-video" 
+                             formControlName="videoOption" 
+                             value="upload" 
+                             (change)="onVideoOptionChange('upload')">
+                      <label for="upload-video">Upload</label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="youtube-video" 
+                             formControlName="videoOption" 
+                             value="youtube" 
+                             (change)="onVideoOptionChange('youtube')">
+                      <label for="youtube-video">For youtube</label>
+                    </div>
+                  </div>
+                  <div class="file-upload-container" *ngIf="videoUploadOption === 'upload'">
+                    <input type="file" id="video-upload" class="file-input" accept="video/*,.zip"
+                           (change)="onFileChange($event, 'introVideo')">
+                    <label for="video-upload" class="file-upload-box">
+                      <!-- <i class="fas fa-upload"></i> -->
+                       <img src="/assets/images/file.svg" alt="" class="upload-icon">
+                      <p>Drop or select file to here</p>
+                    </label>
+                  </div>
+                  <div *ngIf="videoUploadOption === 'youtube'" class="youtube-input">
+                    <input type="text" placeholder="Enter YouTube video URL" formControlName="introVideo">
+                  </div>
+                  <p class="upload-hint">Upload mp4 file, wmv file, mov file, avi file, flv file or zip file for your video</p>
+                  <div *ngIf="f['introVideo'].touched && f['introVideo'].invalid" class="error-message">
+                    <div *ngIf="f['introVideo'].errors?.['required']">Introduction video is required</div>
+                  </div>
+                </div>
+                
+                <!-- Verification Document Upload -->
+                <div class="form-group">
+                  <label class="required">Upload verification document (Maximum size 1024 mb)</label>
+                  <div class="file-upload-container">
+                    <input type="file" id="verification-upload" class="file-input" accept=".pdf"
+                           (change)="onFileChange($event, 'verificationDoc')">
+                    <label for="verification-upload" class="file-upload-box">
+                      <!-- <i class="fas fa-upload"></i> -->
+                      <img src="/assets/images/file.svg" alt="" class="upload-icon">
+                      <p>Drop or select file to here</p>
+                    </label>
+                  </div>
+                  <p class="upload-hint">Upload pdf file for your document</p>
+                  <div *ngIf="f['verificationDoc'].touched && f['verificationDoc'].invalid" class="error-message">
+                    <div *ngIf="f['verificationDoc'].errors?.['required']">Verification document is required</div>
+                  </div>
+                </div>
+                
+                <!-- Resume Document Upload -->
+                <div class="form-group">
+                  <label class="required">Upload resume document (Maximum size 1024 mb)</label>
+                  <div class="file-upload-container">
+                    <input type="file" id="resume-upload" class="file-input" accept=".pdf"
+                           (change)="onFileChange($event, 'resumeDoc')">
+                    <label for="resume-upload" class="file-upload-box">
+                      <!-- <i class="fas fa-upload"></i> -->
+                      <img src="/assets/images/file.svg" alt="" class="upload-icon">
+                      <p>Drop or select file to here</p>
+                    </label>
+                  </div>
+                  <p class="upload-hint">Upload pdf file for your document</p>
+                  <div *ngIf="f['resumeDoc'].touched && f['resumeDoc'].invalid" class="error-message">
+                    <div *ngIf="f['resumeDoc'].errors?.['required']">Resume document is required</div>
+                  </div>
+                </div>
+                
+                <!-- Additional Verification Document Upload -->
+                <div class="form-group">
+                  <label>Upload verification document (Maximum size 1024 mb)</label>
+                  <div class="file-upload-container">
+                    <input type="file" id="additional-upload" class="file-input" accept=".pdf"
+                           (change)="onFileChange($event, 'additionalDoc')">
+                    <label for="additional-upload" class="file-upload-box">
+                      <!-- <i class="fas fa-upload"></i> -->
+                      <img src="/assets/images/file.svg" alt="" class="upload-icon">
+                      <p>Drop or select file to here</p>
+                    </label>
+                  </div>
+                  <p class="upload-hint">Upload pdf file for your document</p>
+                </div>
+                
+                <!-- Terms and Conditions -->
+                <div class="form-group checkbox-group">
+                  <div class="checkbox-container">
+                    <input type="checkbox" id="terms" formControlName="termsAccepted" class="checkbox">
+                    <label for="terms">I agree to the website terms & conditions and privacy policy</label>
+                  </div>
+                  <div *ngIf="f['termsAccepted'].touched && f['termsAccepted'].invalid" class="error-message">
+                    <div *ngIf="f['termsAccepted'].errors?.['required']">You must accept terms and conditions</div>
+                  </div>
+                </div>
+                
+                <!-- Sign Up Button -->
+                <button type="submit" class="btn-primary" [disabled]="signupForm.invalid">Sign Up</button>
+                
+                <!-- Google Sign Up -->
+                <button type="button" class="btn-google">
+                  <img src="assets/images/google-svg-icon.svg" alt="Google">
+                  Sign Up With Google
+                </button>
+                
+                <!-- Sign In Link -->
+                <div class="sign-in-link">
+                  Already have an Account? <a routerLink="/login">Sign in</a>
+                </div>
+              </form>
+  
+            </div>
+          </div>
+  
+          <div class="col-12 col-lg-6">
+            <div>
+              <img src="assets/images/signup-img.png" alt="Sign Up Illustration" class="img-fluid">
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </section>
+  
+    <div class="page-bg"><img src="assets/images/bg-image.png" alt="page-bg"></div>
+  </main>
